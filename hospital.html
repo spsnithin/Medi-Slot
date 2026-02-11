@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MediSlot — Book & Pay for Your Appointment</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --teal: #0a7e6e;
+    --teal-light: #0fa68f;
+    --teal-pale: #e6f7f5;
+    --cream: #faf9f7;
+    --dark: #1a1f2e;
+    --gray: #6b7080;
+    --border: #dde3e0;
+    --white: #ffffff;
+    --accent: #f0a500;
+    --danger: #e05252;
+    --success: #27ae80;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--teal);
+  }
+  .logo span { color: var(--dark); }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--teal);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 1rem;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--gray);
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-left: 28px;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--teal); }
+  .header-btn {
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 28px;
+    transition: background 0.2s;
+  }
+  .header-btn:hover { background: var(--teal-light); }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--teal) 0%, #064d42 100%);
+    color: white;
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    font-size: 1rem;
+    opacity: 0.85;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .steps {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.12);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    backdrop-filter: blur(6px);
+  }
+  .step-num {
+    width: 24px; height: 24px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  /* ─── MAIN GRID ─── */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ─── SECTION TITLES ─── */
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--dark);
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    margin-bottom: 24px;
+  }
+
+  /* ─── DOCTOR CARDS ─── */
+  .doctors-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .doctor-card {
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.22s;
+    position: relative;
+    background: white;
+  }
+  .doctor-card:hover {
+    border-color: var(--teal-light);
+    box-shadow: 0 4px 14px rgba(10,126,110,0.12);
+    transform: translateY(-2px);
+  }
+  .doctor-card.selected {
+    border-color: var(--teal);
+    background: var(--teal-pale);
+    box-shadow: 0 4px 16px rgba(10,126,110,0.15);
+  }
+  .doctor-card.selected .check-badge {
+    display: flex;
+  }
+  .check-badge {
+    display: none;
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 22px; height: 22px;
+    background: var(--teal);
+    border-radius: 50%;
+    align-items: center; justify-content: center;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .doctor-avatar {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+  }
+  .doctor-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--dark);
+    margin-bottom: 2px;
+  }
+  .doctor-spec {
+    font-size: 0.78rem;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+  .doctor-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: var(--teal-pale);
+    color: var(--teal);
+  }
+  .badge.orange { background: #fff4e0; color: #c17f00; }
+  .badge.blue { background: #e8f0fe; color: #2563eb; }
+
+  /* ─── DATE PICKER ─── */
+  .calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .cal-btn {
+    background: none;
+    border: 1px solid var(--border);
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--dark);
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cal-btn:hover { background: var(--teal-pale); border-color: var(--teal); }
+  .cal-month { font-weight: 600; font-size: 0.95rem; }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+  }
+  .cal-day-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--gray);
+    padding: 4px 0;
+    text-transform: uppercase;
+  }
+  .cal-day {
+    width: 36px; height: 36px;
+    margin: 0 auto;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    position: relative;
+    color: var(--dark);
+  }
+  .cal-day:hover:not(.disabled):not(.empty) { background: var(--teal-pale); color: var(--teal); }
+  .cal-day.selected { background: var(--teal); color: white; font-weight: 600; }
+  .cal-day.today:not(.selected)::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--teal);
+  }
+  .cal-day.disabled { color: #ccc; cursor: default; }
+  .cal-day.empty { cursor: default; }
+
+  /* ─── TIME SLOTS ─── */
+  .slot-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 16px 0 10px;
+  }
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .slot {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 6px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.18s;
+    color: var(--dark);
+    background: white;
+  }
+  .slot:hover:not(.booked) { border-color: var(--teal); color: var(--teal); background: var(--teal-pale); }
+  .slot.selected { border-color: var(--teal); background: var(--teal); color: white; font-weight: 600; }
+  .slot.booked { background: #f5f5f5; color: #bbb; cursor: not-allowed; text-decoration: line-through; }
+  .slot-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    margin: 3px auto 0;
+  }
+  .slot.available .slot-dot { background: var(--success); }
+  .slot.selected .slot-dot { background: white; }
+  .slot.booked .slot-dot { background: #ccc; }
+
+  /* ─── SIDEBAR SUMMARY ─── */
+  .summary-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    overflow: hidden;
+    position: sticky;
+    top: 90px;
+  }
+  .summary-header {
+    background: linear-gradient(135deg, var(--teal), #064d42);
+    padding: 22px 24px;
+    color: white;
+  }
+  .summary-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+  .summary-header p { font-size: 0.82rem; opacity: 0.8; }
+  .summary-body { padding: 24px; }
+  .summary-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-row:last-of-type { border-bottom: none; }
+  .summary-icon {
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: var(--teal-pale);
+    color: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .summary-label { font-size: 0.72rem; color: var(--gray); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .summary-value { font-size: 0.9rem; font-weight: 600; color: var(--dark); }
+  .summary-value.empty { color: #bbb; font-weight: 400; font-style: italic; }
+
+  /* ─── FORM ─── */
+  .form-row { margin-bottom: 16px; }
+  .form-row label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+  .form-row input, .form-row select, .form-row textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--dark);
+    background: white;
+    transition: border-color 0.2s;
+    outline: none;
+    appearance: none;
+  }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(10,126,110,0.08);
+  }
+  .form-row textarea { resize: vertical; min-height: 70px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ─── CONFIRM BUTTON ─── */
+  .confirm-btn {
+    width: 100%;
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.22s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-top: 20px;
+    letter-spacing: 0.3px;
+  }
+  .confirm-btn:hover { background: var(--teal-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(10,126,110,0.25); }
+  .confirm-btn:disabled { background: #aac5c0; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  /* ─── SUCCESS MODAL ─── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .overlay.show { display: flex; }
+  .modal {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 36px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+  }
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: var(--dark);
+  }
+  .modal p { color: var(--gray); font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; }
+  .booking-ref {
+    background: var(--teal-pale);
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin: 16px 0;
+    font-size: 0.85rem;
+    color: var(--teal);
+    font-weight: 600;
+  }
+  .booking-ref span { font-size: 1.1rem; letter-spacing: 2px; }
+  .modal-close {
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+  .modal-close:hover { background: var(--teal-light); }
+
+  /* ─── QUEUE STATUS ─── */
+  .queue-card {
+    background: linear-gradient(135deg, #fff8eb, #fff3d4);
+    border: 1.5px solid #f0c060;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .queue-icon { font-size: 1.8rem; }
+  .queue-info { flex: 1; }
+  .queue-info h4 { font-size: 0.9rem; font-weight: 600; color: #8a5e00; margin-bottom: 2px; }
+  .queue-info p { font-size: 0.8rem; color: #a07020; }
+  .queue-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'Playfair Display', serif;
+  }
+
+  /* ─── PAYMENT ─── */
+  .payment-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .pay-tab {
+    flex: 1;
+    min-width: 90px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--gray);
+    background: white;
+    transition: all 0.2s;
+  }
+  .pay-tab:hover { border-color: var(--teal-light); color: var(--teal); }
+  .pay-tab.active { border-color: var(--teal); background: var(--teal-pale); color: var(--teal); }
+  .pay-tab .tab-icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+
+  .pay-panel { display: none; }
+  .pay-panel.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+
+  .card-input-wrapper {
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .card-input-wrapper input {
+    width: 100%;
+    padding: 11px 14px 11px 44px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .card-input-wrapper input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(10,126,110,0.08); }
+  .card-input-wrapper .inp-icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: var(--gray);
+    pointer-events: none;
+  }
+  .card-logos {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .card-logo {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .card-logo.visa { color: #1a1f8a; }
+  .card-logo.mc { color: #c0392b; }
+  .card-logo.amex { color: #006fcf; }
+
+  .upi-apps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .upi-app {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .upi-app:hover { border-color: var(--teal); background: var(--teal-pale); }
+  .upi-app.selected { border-color: var(--teal); background: var(--teal-pale); }
+  .upi-app .upi-logo { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+  .upi-app span { font-size: 0.7rem; font-weight: 600; color: var(--dark); }
+
+  .upi-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .upi-input-row .form-row { flex: 1; margin-bottom: 0; }
+  .upi-verify-btn {
+    background: var(--teal-pale);
+    color: var(--teal);
+    border: 1.5px solid var(--teal);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .upi-verify-btn:hover { background: var(--teal); color: white; }
+
+  .net-bank-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .bank-option {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--dark);
+  }
+  .bank-option:hover { border-color: var(--teal-light); background: var(--teal-pale); }
+  .bank-option.selected { border-color: var(--teal); background: var(--teal-pale); }
+  .bank-icon { font-size: 1.2rem; }
+
+  .fee-breakdown {
+    background: #f8fffe;
+    border: 1px solid #c3e8e2;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+  }
+  .fee-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 0.85rem;
+    color: var(--gray);
+  }
+  .fee-row.total {
+    border-top: 1px dashed var(--border);
+    margin-top: 8px;
+    padding-top: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--dark);
+  }
+  .fee-row.total span:last-child { color: var(--teal); }
+
+  .secure-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-top: 10px;
+  }
+  .secure-badge span { color: var(--success); font-size: 0.85rem; }
+
+  /* payment processing overlay */
+  .pay-processing {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .pay-processing.show { display: flex; }
+  .pay-spinner {
+    width: 64px; height: 64px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 20px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .pay-processing p { color: white; font-size: 1rem; font-weight: 500; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 860px) {
+    .main { grid-template-columns: 1fr; }
+    .summary-card { position: static; }
+    .doctors-grid { grid-template-columns: 1fr 1fr; }
+    header { padding: 0 16px; }
+    nav { display: none; }
+    .hero { padding: 44px 20px 36px; }
+    .hero h1 { font-size: 1.8rem; }
+  }
+  @media (max-width: 480px) {
+    .doctors-grid { grid-template-columns: 1fr; }
+    .slots-grid { grid-template-columns: repeat(3, 1fr); }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">+</div>
+    Medi<span>Slot</span>
+  </div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Doctors</a>
+    <a href="#">Departments</a>
+    <a href="#">My Appointments</a>
+    <button class="header-btn">Patient Login</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Book Your Doctor Appointment</h1>
+  <p>Skip the waiting hall — choose your doctor, pick a time slot, and arrive right on schedule.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">1</div> Pick a Doctor</div>
+    <div class="step"><div class="step-num">2</div> Choose Date & Time</div>
+    <div class="step"><div class="step-num">3</div> Fill Your Details</div>
+    <div class="step"><div class="step-num">4</div> Pay & Confirm</div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="left-col">
+
+    <!-- STEP 1: DOCTOR -->
+    <div class="card">
+      <div class="section-label">Step 1</div>
+      <div class="section-title">Choose Your Doctor</div>
+      <div class="doctors-grid" id="doctorGrid">
+
+        <div class="doctor-card" data-id="1" data-name="Dr. Priya Nair" data-spec="Cardiologist" onclick="selectDoctor(this)">
+          <span class="check-badge">✓</span>
+          <div class="doctor-avatar" style="background:linear-gradient(135deg,#0a7e6e,#064d42)">PN</div>
+          <div class="doctor-name">Dr. Priya Nair</div>
+          <div class="doctor-spec">Cardiologist — 14 yrs exp.</div>
+          <div class="doctor-meta">
+            <span class="badge">⭐ 4.9</span>
+            <span class="badge orange">Morning</span>
+          </div>
+        </div>
+
+        <div class="doctor-card" data-id="2" data-name="Dr. Arjun Mehta" data-spec="General Physician" onclick="selectDoctor(this)">
+          <span class="check-badge">✓</span>
+          <div class="doctor-avatar" style="background:linear-gradient(135deg,#2563eb,#1a3fa0)">AM</div>
+          <div class="doctor-name">Dr. Arjun Mehta</div>
+          <div class="doctor-spec">General Physician — 9 yrs exp.</div>
+          <div class="doctor-meta">
+            <span class="badge blue">⭐ 4.7</span>
+            <span class="badge orange">All Day</span>
+          </div>
+        </div>
+
+        <div class="doctor-card" data-id="3" data-name="Dr. Sunita Rao" data-spec="Dermatologist" onclick="selectDoctor(this)">
+          <span class="check-badge">✓</span>
+          <div class="doctor-avatar" style="background:linear-gradient(135deg,#9333ea,#5b21b6)">SR</div>
+          <div class="doctor-name">Dr. Sunita Rao</div>
+          <div class="doctor-spec">Dermatologist — 11 yrs exp.</div>
+          <div class="doctor-meta">
+            <span class="badge">⭐ 4.8</span>
+            <span class="badge orange">Afternoon</span>
+          </div>
+        </div>
+
+        <div class="doctor-card" data-id="4" data-name="Dr. Kavya Menon" data-spec="Neurologist" onclick="selectDoctor(this)">
+          <span class="check-badge">✓</span>
+          <div class="doctor-avatar" style="background:linear-gradient(135deg,#e05252,#a83030)">KM</div>
+          <div class="doctor-name">Dr. Kavya Menon</div>
+          <div class="doctor-spec">Neurologist — 16 yrs exp.</div>
+          <div class="doctor-meta">
+            <span class="badge">⭐ 4.9</span>
+            <span class="badge orange">Morning</span>
+          </div>
+        </div>
+
+        <div class="doctor-card" data-id="5" data-name="Dr. Ravi Kumar" data-spec="Orthopedist" onclick="selectDoctor(this)">
+          <span class="check-badge">✓</span>
+          <div class="doctor-avatar" style="background:linear-gradient(135deg,#f0a500,#b87800)">RK</div>
+          <div class="doctor-name">Dr. Ravi Kumar</div>
+          <div class="doctor-spec">Orthopedist — 12 yrs exp.</div>
+          <div class="doctor-meta">
+            <span class="badge">⭐ 4.6</span>
+            <span class="badge orange">All Day</span>
+          </div>
+        </div>
+
+        <div class="doctor-card" data-id="6" data-name="Dr. Ananya Singh" data-spec="Pediatrician" onclick="selectDoctor(this)">
+          <span class="check-badge">✓</span>
+          <div class="doctor-avatar" style="background:linear-gradient(135deg,#0891b2,#065278)">AS</div>
+          <div class="doctor-name">Dr. Ananya Singh</div>
+          <div class="doctor-spec">Pediatrician — 8 yrs exp.</div>
+          <div class="doctor-meta">
+            <span class="badge blue">⭐ 4.8</span>
+            <span class="badge orange">Afternoon</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STEP 2: DATE & TIME -->
+    <div class="card">
+      <div class="section-label">Step 2</div>
+      <div class="section-title">Select Date & Time Slot</div>
+
+      <!-- Calendar -->
+      <div class="calendar-nav">
+        <button class="cal-btn" onclick="changeMonth(-1)">&#8249;</button>
+        <span class="cal-month" id="calMonthLabel"></span>
+        <button class="cal-btn" onclick="changeMonth(1)">&#8250;</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+
+      <!-- Time Slots -->
+      <div id="slotArea">
+        <div class="slot-section-title">🌅 Morning Slots</div>
+        <div class="slots-grid" id="morningSlots"></div>
+        <div class="slot-section-title">🌞 Afternoon Slots</div>
+        <div class="slots-grid" id="afternoonSlots"></div>
+        <div class="slot-section-title">🌆 Evening Slots</div>
+        <div class="slots-grid" id="eveningSlots"></div>
+      </div>
+
+      <!-- Queue indicator -->
+      <div class="queue-card" id="queueCard" style="display:none">
+        <div class="queue-icon">🏥</div>
+        <div class="queue-info">
+          <h4>Current Queue Status</h4>
+          <p>Estimated wait time if you walk in: <b id="waitTime">—</b></p>
+        </div>
+        <div class="queue-number" id="queueNum">—</div>
+      </div>
+    </div>
+
+    <!-- STEP 3: PATIENT DETAILS -->
+    <div class="card">
+      <div class="section-label">Step 3</div>
+      <div class="section-title">Your Details</div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Full Name *</label>
+          <input type="text" id="patientName" placeholder="e.g. Ravi Kumar" />
+        </div>
+        <div class="form-row">
+          <label>Age *</label>
+          <input type="number" id="patientAge" placeholder="e.g. 34" min="1" max="120"/>
+        </div>
+        <div class="form-row">
+          <label>Phone Number *</label>
+          <input type="tel" id="patientPhone" placeholder="+91 98765 43210"/>
+        </div>
+        <div class="form-row">
+          <label>Email Address</label>
+          <input type="email" id="patientEmail" placeholder="you@email.com"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Gender</label>
+        <select id="patientGender">
+          <option value="">Select gender</option>
+          <option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Reason / Symptoms (optional)</label>
+        <textarea id="patientReason" placeholder="Briefly describe your symptoms or reason for visit..."></textarea>
+      </div>
+    </div>
+
+    <!-- STEP 4: PAYMENT -->
+    <div class="card" id="paymentSection">
+      <div class="section-label">Step 4</div>
+      <div class="section-title">Payment</div>
+
+      <!-- Fee Breakdown -->
+      <div class="fee-breakdown">
+        <div class="fee-row"><span>Consultation Fee</span><span id="feeConsult">₹500</span></div>
+        <div class="fee-row"><span>Slot Booking Fee</span><span>₹50</span></div>
+        <div class="fee-row"><span>Platform Convenience Fee</span><span>₹20</span></div>
+        <div class="fee-row total"><span>Total Payable</span><span id="feeTotal">₹570</span></div>
+      </div>
+
+      <!-- Payment Method Tabs -->
+      <div class="payment-tabs">
+        <div class="pay-tab active" onclick="switchPayTab('card', this)">
+          <span class="tab-icon">💳</span>Credit / Debit
+        </div>
+        <div class="pay-tab" onclick="switchPayTab('upi', this)">
+          <span class="tab-icon">📱</span>UPI
+        </div>
+        <div class="pay-tab" onclick="switchPayTab('netbank', this)">
+          <span class="tab-icon">🏦</span>Net Banking
+        </div>
+        <div class="pay-tab" onclick="switchPayTab('wallet', this)">
+          <span class="tab-icon">👛</span>Wallets
+        </div>
+      </div>
+
+      <!-- CARD PANEL -->
+      <div class="pay-panel active" id="panel-card">
+        <div class="card-logos">
+          <span style="font-size:0.75rem;color:var(--gray);font-weight:500;">Accepted:</span>
+          <div class="card-logo visa">VISA</div>
+          <div class="card-logo mc">MC</div>
+          <div class="card-logo amex">AMEX</div>
+          <div class="card-logo" style="color:#0a6;">RuPay</div>
+        </div>
+        <div class="card-input-wrapper">
+          <span class="inp-icon">💳</span>
+          <input type="text" id="cardNumber" placeholder="Card Number" maxlength="19" oninput="formatCard(this)" />
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+          <div class="card-input-wrapper" style="margin-bottom:0">
+            <span class="inp-icon">📅</span>
+            <input type="text" id="cardExpiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" />
+          </div>
+          <div class="card-input-wrapper" style="margin-bottom:0">
+            <span class="inp-icon">🔒</span>
+            <input type="password" id="cardCVV" placeholder="CVV" maxlength="4" />
+          </div>
+        </div>
+        <div class="card-input-wrapper">
+          <span class="inp-icon">👤</span>
+          <input type="text" id="cardName" placeholder="Name on Card" />
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;color:var(--gray);margin-bottom:4px;cursor:pointer;">
+          <input type="checkbox" id="saveCard" style="width:auto;accent-color:var(--teal);" /> Save card for future appointments
+        </label>
+      </div>
+
+      <!-- UPI PANEL -->
+      <div class="pay-panel" id="panel-upi">
+        <div class="upi-apps">
+          <div class="upi-app" onclick="selectUPIApp(this, 'GPay')">
+            <span class="upi-logo">🟢</span><span>Google Pay</span>
+          </div>
+          <div class="upi-app" onclick="selectUPIApp(this, 'PhonePe')">
+            <span class="upi-logo">🟣</span><span>PhonePe</span>
+          </div>
+          <div class="upi-app" onclick="selectUPIApp(this, 'Paytm')">
+            <span class="upi-logo">🔵</span><span>Paytm</span>
+          </div>
+          <div class="upi-app" onclick="selectUPIApp(this, 'Other')">
+            <span class="upi-logo">📲</span><span>Other UPI</span>
+          </div>
+        </div>
+        <div class="upi-input-row">
+          <div class="form-row">
+            <label>Enter UPI ID</label>
+            <input type="text" id="upiId" placeholder="yourname@upi" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.88rem;width:100%;outline:none;" onfocus="this.style.borderColor='var(--teal)'" onblur="this.style.borderColor='var(--border)'" />
+          </div>
+          <button class="upi-verify-btn" onclick="verifyUPI()">Verify</button>
+        </div>
+        <div id="upiStatus" style="font-size:0.8rem;margin-top:8px;height:18px;"></div>
+      </div>
+
+      <!-- NET BANKING PANEL -->
+      <div class="pay-panel" id="panel-netbank">
+        <div class="net-bank-list">
+          <div class="bank-option" onclick="selectBank(this, 'SBI')">
+            <span class="bank-icon">🏛️</span> State Bank of India
+          </div>
+          <div class="bank-option" onclick="selectBank(this, 'HDFC')">
+            <span class="bank-icon">🏦</span> HDFC Bank
+          </div>
+          <div class="bank-option" onclick="selectBank(this, 'ICICI')">
+            <span class="bank-icon">🏦</span> ICICI Bank
+          </div>
+          <div class="bank-option" onclick="selectBank(this, 'Axis')">
+            <span class="bank-icon">🏦</span> Axis Bank
+          </div>
+          <div class="bank-option" onclick="selectBank(this, 'Kotak')">
+            <span class="bank-icon">🏦</span> Kotak Mahindra
+          </div>
+          <div class="bank-option" onclick="selectBank(this, 'BOB')">
+            <span class="bank-icon">🏛️</span> Bank of Baroda
+          </div>
+        </div>
+        <div class="form-row" style="margin-bottom:0">
+          <label>Or select other bank</label>
+          <select id="otherBank" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:0.88rem;width:100%;outline:none;appearance:none;">
+            <option value="">-- Choose your bank --</option>
+            <option>Punjab National Bank</option>
+            <option>Canara Bank</option>
+            <option>Union Bank of India</option>
+            <option>IndusInd Bank</option>
+            <option>Yes Bank</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- WALLET PANEL -->
+      <div class="pay-panel" id="panel-wallet">
+        <div class="upi-apps" style="grid-template-columns:repeat(3,1fr)">
+          <div class="upi-app" onclick="selectUPIApp(this,'Paytm Wallet')">
+            <span class="upi-logo">🔵</span><span>Paytm</span>
+          </div>
+          <div class="upi-app" onclick="selectUPIApp(this,'Amazon Pay')">
+            <span class="upi-logo">🟠</span><span>Amazon Pay</span>
+          </div>
+          <div class="upi-app" onclick="selectUPIApp(this,'Mobikwik')">
+            <span class="upi-logo">🟡</span><span>Mobikwik</span>
+          </div>
+        </div>
+        <p style="font-size:0.82rem;color:var(--gray);margin-top:4px;">You'll be redirected to your wallet app to complete payment.</p>
+      </div>
+
+      <div class="secure-badge">
+        <span>🔒</span> 256-bit SSL Encrypted · PCI DSS Compliant · Powered by Razorpay
+      </div>
+    </div>
+
+  </div><!-- /left col -->
+
+  <!-- SIDEBAR -->
+  <div>
+    <div class="summary-card">
+      <div class="summary-header">
+        <h3>Appointment Summary</h3>
+        <p>Review before you confirm</p>
+      </div>
+      <div class="summary-body">
+
+        <div class="summary-row">
+          <div class="summary-icon">👨‍⚕️</div>
+          <div>
+            <div class="summary-label">Doctor</div>
+            <div class="summary-value empty" id="sumDoctor">Not selected</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-icon">🏥</div>
+          <div>
+            <div class="summary-label">Specialization</div>
+            <div class="summary-value empty" id="sumSpec">—</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-icon">📅</div>
+          <div>
+            <div class="summary-label">Date</div>
+            <div class="summary-value empty" id="sumDate">Not selected</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-icon">⏰</div>
+          <div>
+            <div class="summary-label">Time Slot</div>
+            <div class="summary-value empty" id="sumSlot">Not selected</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-icon">🎟️</div>
+          <div>
+            <div class="summary-label">Token Number</div>
+            <div class="summary-value empty" id="sumToken">Assigned on confirm</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-icon">💰</div>
+          <div>
+            <div class="summary-label">Consultation Fee</div>
+            <div class="summary-value" id="sumFee">₹570</div>
+          </div>
+        </div>
+
+        <div class="summary-row">
+          <div class="summary-icon">✅</div>
+          <div>
+            <div class="summary-label">Payment Status</div>
+            <div class="summary-value empty" id="sumPayStatus">Pending</div>
+          </div>
+        </div>
+
+        <button class="confirm-btn" id="confirmBtn" onclick="confirmBooking()" disabled>
+          💳 Pay ₹570 & Confirm
+        </button>
+        <p style="text-align:center;font-size:0.72rem;color:var(--gray);margin-top:10px;">
+          You'll receive an SMS & email confirmation with your token number.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAYMENT PROCESSING OVERLAY -->
+<div class="pay-processing" id="payProcessing">
+  <div class="pay-spinner"></div>
+  <p id="processingMsg">Processing your payment...</p>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <h2>Appointment Booked!</h2>
+    <p>Payment successful! Your slot has been reserved. Please arrive 10 minutes early and show this reference at the desk.</p>
+    <div class="booking-ref">
+      Booking Ref: <span id="bookingRef">—</span>
+    </div>
+    <p id="modalDetails" style="font-size:0.85rem; color:var(--teal); font-weight:500;"></p>
+    <div style="background:#f0fdf9;border-radius:10px;padding:12px 16px;margin:14px 0;font-size:0.82rem;color:#065;line-height:1.8;">
+      🗓 <b id="modalDate">—</b><br/>
+      ⏰ Token: <b id="modalToken">—</b> | Skip the walk-in queue!<br/>
+      💳 Paid: <b id="modalAmtPaid">₹570</b> · Txn ID: <b id="modalTxnId">—</b>
+    </div>
+    <button class="modal-close" onclick="closeModal()">Done</button>
+  </div>
+</div>
+
+<script>
+  // ─── STATE ───
+  let selectedDoctor = null;
+  let selectedDate = null;
+  let selectedSlot = null;
+  let selectedUPIApp = null;
+  let selectedBank = null;
+  let activePayTab = 'card';
+  let currentYear, currentMonth;
+
+  const DOCTOR_FEES = { 1: 700, 2: 400, 3: 600, 4: 900, 5: 500, 6: 450 };
+  const BOOKING_FEE = 50;
+  const PLATFORM_FEE = 20;
+
+  const today = new Date();
+  currentYear = today.getFullYear();
+  currentMonth = today.getMonth();
+
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DAY_NAMES = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+  const MORNING = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM'];
+  const AFTERNOON = ['12:00 PM','12:30 PM','1:00 PM','2:00 PM','2:30 PM','3:00 PM'];
+  const EVENING = ['4:00 PM','4:30 PM','5:00 PM','5:30 PM','6:00 PM','6:30 PM'];
+
+  function getBookedSlots(doctorId, dateStr) {
+    const seed = (doctorId * 7 + dateStr.split('').reduce((a,c)=>a+c.charCodeAt(0),0)) % 100;
+    const all = [...MORNING, ...AFTERNOON, ...EVENING];
+    return all.filter((_, i) => (seed + i * 13) % 5 === 0);
+  }
+
+  // ─── CALENDAR ───
+  function renderCalendar() {
+    document.getElementById('calMonthLabel').textContent = `${MONTHS[currentMonth]} ${currentYear}`;
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML = '';
+    DAY_NAMES.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-day-name';
+      el.textContent = d;
+      grid.appendChild(el);
+    });
+    const first = new Date(currentYear, currentMonth, 1).getDay();
+    const days = new Date(currentYear, currentMonth + 1, 0).getDate();
+    for (let i = 0; i < first; i++) {
+      const el = document.createElement('div');
+      el.className = 'cal-day empty';
+      grid.appendChild(el);
+    }
+    for (let d = 1; d <= days; d++) {
+      const el = document.createElement('div');
+      const date = new Date(currentYear, currentMonth, d);
+      const isToday = date.toDateString() === today.toDateString();
+      const isPast = date < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      el.className = 'cal-day' + (isToday ? ' today' : '') + (isPast ? ' disabled' : '');
+      if (selectedDate === dateStr) el.classList.add('selected');
+      el.textContent = d;
+      if (!isPast) el.onclick = () => pickDate(dateStr, el);
+      grid.appendChild(el);
+    }
+  }
+
+  function pickDate(dateStr, el) {
+    selectedDate = dateStr;
+    selectedSlot = null;
+    document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
+    el.classList.add('selected');
+    renderSlots();
+    updateSummary();
+  }
+
+  function changeMonth(dir) {
+    currentMonth += dir;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    renderCalendar();
+  }
+
+  // ─── SLOTS ───
+  function renderSlots() {
+    if (!selectedDate) return;
+    const booked = selectedDoctor ? getBookedSlots(selectedDoctor.id, selectedDate) : [];
+    function fillSlots(containerId, times) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      times.forEach(t => {
+        const isBooked = booked.includes(t);
+        const div = document.createElement('div');
+        div.className = `slot ${isBooked ? 'booked' : 'available'}`;
+        if (selectedSlot === t && !isBooked) div.classList.add('selected');
+        div.innerHTML = `${t}<div class="slot-dot"></div>`;
+        if (!isBooked) div.onclick = (e) => { selectedSlot = t; document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected')); e.currentTarget.classList.add('selected'); updateSummary(); };
+        container.appendChild(div);
+      });
+    }
+    fillSlots('morningSlots', MORNING);
+    fillSlots('afternoonSlots', AFTERNOON);
+    fillSlots('eveningSlots', EVENING);
+    const qNum = Math.floor(Math.random() * 12) + 3;
+    document.getElementById('queueNum').textContent = `#${qNum}`;
+    document.getElementById('waitTime').textContent = `~${qNum * 8} mins`;
+    document.getElementById('queueCard').style.display = 'flex';
+  }
+
+  // ─── DOCTOR ───
+  function selectDoctor(el) {
+    document.querySelectorAll('.doctor-card').forEach(d => d.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedDoctor = { id: +el.dataset.id, name: el.dataset.name, spec: el.dataset.spec };
+    selectedSlot = null;
+    if (selectedDate) renderSlots();
+    updateFees();
+    updateSummary();
+  }
+
+  // ─── FEES ───
+  function updateFees() {
+    const consult = selectedDoctor ? DOCTOR_FEES[selectedDoctor.id] : 500;
+    const total = consult + BOOKING_FEE + PLATFORM_FEE;
+    document.getElementById('feeConsult').textContent = `₹${consult}`;
+    document.getElementById('feeTotal').textContent = `₹${total}`;
+    document.getElementById('sumFee').textContent = `₹${total}`;
+    document.getElementById('confirmBtn').textContent = `💳 Pay ₹${total} & Confirm`;
+    document.getElementById('modalAmtPaid') && (document.getElementById('modalAmtPaid').textContent = `₹${total}`);
+  }
+
+  // ─── PAYMENT TABS ───
+  function switchPayTab(tab, el) {
+    activePayTab = tab;
+    document.querySelectorAll('.pay-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
+  }
+
+  function selectUPIApp(el, name) {
+    selectedUPIApp = name;
+    document.querySelectorAll('.upi-app').forEach(a => a.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function selectBank(el, name) {
+    selectedBank = name;
+    document.querySelectorAll('.bank-option').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ─── CARD FORMATTING ───
+  function formatCard(input) {
+    let v = input.value.replace(/\D/g, '').substring(0, 16);
+    input.value = v.replace(/(.{4})/g, '$1 ').trim();
+  }
+  function formatExpiry(input) {
+    let v = input.value.replace(/\D/g, '').substring(0, 4);
+    if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+    input.value = v;
+  }
+
+  // ─── UPI VERIFY ───
+  function verifyUPI() {
+    const upiId = document.getElementById('upiId').value.trim();
+    const status = document.getElementById('upiStatus');
+    if (!upiId || !upiId.includes('@')) {
+      status.style.color = 'var(--danger)';
+      status.textContent = '❌ Invalid UPI ID format (e.g. name@upi)';
+      return;
+    }
+    status.style.color = 'var(--gray)';
+    status.textContent = '⏳ Verifying...';
+    setTimeout(() => {
+      status.style.color = 'var(--success)';
+      status.textContent = '✅ UPI ID verified successfully!';
+    }, 1200);
+  }
+
+  // ─── SUMMARY UPDATE ───
+  function updateSummary() {
+    const sd = document.getElementById('sumDoctor');
+    const ss = document.getElementById('sumSpec');
+    const sdt = document.getElementById('sumDate');
+    const sl = document.getElementById('sumSlot');
+
+    sd.textContent = selectedDoctor ? selectedDoctor.name : 'Not selected';
+    sd.className = selectedDoctor ? 'summary-value' : 'summary-value empty';
+    ss.textContent = selectedDoctor ? selectedDoctor.spec : '—';
+    ss.className = selectedDoctor ? 'summary-value' : 'summary-value empty';
+
+    if (selectedDate) {
+      const d = new Date(selectedDate + 'T00:00:00');
+      sdt.textContent = d.toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'long', year:'numeric' });
+      sdt.className = 'summary-value';
+    } else {
+      sdt.textContent = 'Not selected';
+      sdt.className = 'summary-value empty';
+    }
+
+    sl.textContent = selectedSlot || 'Not selected';
+    sl.className = selectedSlot ? 'summary-value' : 'summary-value empty';
+
+    const canConfirm = selectedDoctor && selectedDate && selectedSlot;
+    document.getElementById('confirmBtn').disabled = !canConfirm;
+  }
+
+  // ─── PAYMENT VALIDATION ───
+  function validatePayment() {
+    if (activePayTab === 'card') {
+      const num = document.getElementById('cardNumber').value.replace(/\s/g,'');
+      const exp = document.getElementById('cardExpiry').value;
+      const cvv = document.getElementById('cardCVV').value;
+      const name = document.getElementById('cardName').value.trim();
+      if (num.length < 16) { alert('Please enter a valid 16-digit card number.'); return false; }
+      if (exp.length < 7) { alert('Please enter a valid expiry date (MM / YY).'); return false; }
+      if (cvv.length < 3) { alert('Please enter a valid CVV.'); return false; }
+      if (!name) { alert('Please enter the name on card.'); return false; }
+    } else if (activePayTab === 'upi') {
+      const upiStatus = document.getElementById('upiStatus').textContent;
+      const upiId = document.getElementById('upiId').value.trim();
+      if (!upiId) { alert('Please enter your UPI ID.'); return false; }
+    } else if (activePayTab === 'netbank') {
+      if (!selectedBank && !document.getElementById('otherBank').value) {
+        alert('Please select a bank.'); return false;
+      }
+    }
+    return true;
+  }
+
+  // ─── CONFIRM & PAY ───
+  function confirmBooking() {
+    const name = document.getElementById('patientName').value.trim();
+    const phone = document.getElementById('patientPhone').value.trim();
+    if (!name || !phone) { alert('Please fill in your name and phone number to confirm.'); return; }
+    if (!validatePayment()) return;
+
+    const processing = document.getElementById('payProcessing');
+    const msgs = ['Processing your payment...', 'Verifying transaction...', 'Securing your slot...'];
+    let mIdx = 0;
+    processing.classList.add('show');
+    const msgEl = document.getElementById('processingMsg');
+    const interval = setInterval(() => { mIdx = (mIdx + 1) % msgs.length; msgEl.textContent = msgs[mIdx]; }, 900);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      processing.classList.remove('show');
+
+      const token = Math.floor(Math.random() * 40) + 1;
+      const ref = 'MED' + Date.now().toString().slice(-6);
+      const txnId = 'TXN' + Math.random().toString(36).substring(2,10).toUpperCase();
+      const dateObj = new Date(selectedDate + 'T00:00:00');
+      const dateLabel = dateObj.toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long' });
+      const totalAmt = document.getElementById('feeTotal').textContent;
+
+      document.getElementById('bookingRef').textContent = ref;
+      document.getElementById('modalDetails').textContent = `${selectedDoctor.name} · ${selectedDoctor.spec}`;
+      document.getElementById('modalDate').textContent = `${dateLabel} at ${selectedSlot}`;
+      document.getElementById('modalToken').textContent = `T-${String(token).padStart(3,'0')}`;
+      document.getElementById('modalAmtPaid').textContent = totalAmt;
+      document.getElementById('modalTxnId').textContent = txnId;
+      document.getElementById('sumToken').textContent = `T-${String(token).padStart(3,'0')}`;
+      document.getElementById('sumToken').className = 'summary-value';
+      document.getElementById('sumPayStatus').textContent = '✅ Paid';
+      document.getElementById('sumPayStatus').className = 'summary-value';
+      document.getElementById('sumPayStatus').style.color = 'var(--success)';
+
+      document.getElementById('overlay').classList.add('show');
+    }, 2800);
+  }
+
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('show');
+  }
+
+  // ─── INIT ───
+  renderCalendar();
+  renderSlots();
+  updateFees();
+</script>
+</body>
+</html>
